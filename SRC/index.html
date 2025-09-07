@@ -1,0 +1,1801 @@
+
+
+<!DOCTYPE html><html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FUTBOL AL MAXIMO - Estadísticas Avanzadas</title>
+    <style>
+        :root {
+            --primary-color: #8a2be2;
+            --secondary-color: #00ffff;
+            --accent-color: #ff00ff;
+            --text-color: #e0e0e0;
+            --light-bg: #121212;
+            --dark-bg: #000000;
+            --white: #ffffff;
+            --success-color: #00ff00;
+            --error-color: #ff0000;
+            --particle-density: 80;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(0, 255, 255, 0.1) 0%, transparent 50%);
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: -2;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--dark-bg);
+            color: var(--secondary-color);
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 15px var(--primary-color);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            z-index: -1;
+            filter: blur(20px);
+            opacity: 0.5;
+            animation: gradientShift 8s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 0 0 10px var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-panel {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .balance {
+            font-size: 1.3em;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: rgba(30, 30, 40, 0.8);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            border: 1px solid var(--primary-color);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-shadow: 0 0 5px var(--secondary-color);
+        }
+
+        .match-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .teams {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .team-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        .vs {
+            color: var(--secondary-color);
+            font-size: 0.7em;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 20px;
+            text-shadow: 0 0 5px var(--secondary-color);
+        }
+
+        .match-stats {
+            font-size: 1.1em;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid var(--primary-color);
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .stat-bar-container {
+            width: 60%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-bar {
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .stat-bar-local {
+            background: var(--accent-color);
+        }
+
+        .stat-bar-visitor {
+            background: var(--secondary-color);
+        }
+
+        .odds-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            gap: 10px;
+        }
+
+        .odd-box {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            border-radius: 8px;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 0 5px var(--primary-color);
+        }
+
+        .odd-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--accent-color);
+        }
+
+        .odd-box.selected {
+            border-color: var(--primary-color);
+            background: rgba(138, 43, 226, 0.2);
+            box-shadow: 0 0 15px var(--primary-color);
+        }
+
+        .odd-label {
+            font-size: 0.9em;
+            color: var(--text-color);
+            margin-bottom: 5px;
+        }
+
+        .odd-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--secondary-color);
+            text-shadow: 0 0 5px var(--secondary-color);
+        }
+
+        .bet-controls {
+            margin-top: 20px;
+        }
+
+        .bet-amount {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .amount-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .quick-bets {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quick-bet {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            box-shadow: 0 0 5px var(--primary-color);
+        }
+
+        .quick-bet:hover {
+            background: rgba(138, 43, 226, 0.2);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        input[type="number"], select {
+            padding: 12px;
+            width: 100%;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid var(--primary-color);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            box-sizing: border-box;
+            box-shadow: 0 0 5px var(--primary-color);
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        button:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--accent-color);
+        }
+
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+
+        .success {
+            background: rgba(0, 255, 0, 0.2);
+            border-left: 4px solid var(--success-color);
+            color: var(--success-color);
+            box-shadow: 0 0 10px var(--success-color);
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            border-left: 4px solid var(--error-color);
+            color: var(--error-color);
+            box-shadow: 0 0 10px var(--error-color);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: var(--text-color);
+        }
+
+        .stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            border-bottom-color: var(--primary-color);
+            color: var(--primary-color);
+            text-shadow: 0 0 5px var(--primary-color);
+        }
+
+        .tab:hover:not(.active) {
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .history-table th, .history-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .history-table th {
+            color: var(--secondary-color);
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--secondary-color);
+        }
+
+        .history-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .profit-positive {
+            color: var(--success-color);
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--success-color);
+        }
+
+        .profit-negative {
+            color: var(--error-color);
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--error-color);
+        }
+
+        .result-win {
+            color: var(--success-color);
+        }
+
+        .result-loss {
+            color: var(--error-color);
+        }
+
+        .result-draw {
+            color: var(--secondary-color);
+        }
+
+        .chart-container {
+            height: 250px;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .live-badge {
+            background: var(--error-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            margin-left: 10px;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 10px var(--error-color);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .progress-container {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            margin: 15px 0;
+            height: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 5px;
+            background: var(--primary-color);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .countdown {
+            font-size: 1.2em;
+            color: var(--secondary-color);
+            margin: 10px 0;
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--secondary-color);
+        }
+
+        .league-selector {
+            margin-bottom: 20px;
+        }
+
+        .league-option {
+            display: inline-block;
+            padding: 5px 15px;
+            margin-right: 10px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            border: 1px solid var(--primary-color);
+        }
+
+        .league-option.active {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        .team-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .team-stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            width: 48%;
+            text-align: center;
+            border: 1px solid var(--primary-color);
+        }
+
+        .team-stat-title {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .team-stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--secondary-color);
+            text-shadow: 0 0 5px var(--secondary-color);
+        }
+
+        .local-team {
+            color: var(--accent-color);
+        }
+
+        .visitor-team {
+            color: var(--secondary-color);
+        }
+
+        #loginModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #loginModal > div {
+            background: var(--dark-bg);
+            padding: 40px 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px var(--primary-color);
+            min-width: 300px;
+            text-align: center;
+            border: 1px solid var(--primary-color);
+        }
+
+        #loginModal h2 {
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            text-shadow: 0 0 5px var(--secondary-color);
+        }
+
+        #loginModal input {
+            padding: 12px;
+            width: 90%;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid var(--primary-color);
+            font-size: 1.1em;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            box-shadow: 0 0 5px var(--primary-color);
+        }
+
+        #loginModal button {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        #loginModal button:hover {
+            background: var(--accent-color);
+            box-shadow: 0 0 15px var(--accent-color);
+        }
+
+        #loginError {
+            color: var(--error-color);
+            margin-top: 10px;
+            display: none;
+            text-shadow: 0 0 5px var(--error-color);
+        }
+
+        #microbit-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        #connect-microbit {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 0 5px var(--primary-color);
+        }
+
+        #connect-microbit:hover {
+            background: var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        #microbit-status {
+            margin-top: 5px;
+            font-size: 12px;
+            color: var(--text-color);
+        }
+
+        /* Animations */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .neon-text {
+            animation: flicker 1.5s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow:
+                    0 0 5px var(--secondary-color),
+                    0 0 10px var(--secondary-color),
+                    0 0 20px var(--secondary-color),
+                    0 0 40px var(--primary-color),
+                    0 0 80px var(--primary-color);
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+            }
+        }
+
+        /* Toast notification */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: var(--dark-bg);
+            color: var(--secondary-color);
+            text-align: center;
+            border-radius: 5px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            right: 30px;
+            bottom: 30px;
+            font-size: 17px;
+            opacity: 0;
+            transition: opacity 0.5s, visibility 0.5s;
+            border: 1px solid var(--secondary-color);
+            box-shadow: 0 0 15px var(--secondary-color);
+        }
+
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <div id="loginModal">
+        <div>
+            <h2>Iniciar sesión</h2>
+            <input id="usernameInput" type="text" placeholder="Usuario">
+            <br>
+            <button id="loginBtn">Entrar</button>
+            <div id="loginError">Por favor ingresa un usuario</div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1 class="neon-text"><i class="fas fa-futbol"></i> FUTBOL AL MAXIMO</h1>
+            <div class="user-panel">
+                <div class="balance">
+                    <i class="fas fa-coins"></i>
+                    <span id="balance">800.000</span>
+                </div>
+                <span id="userDisplay" style="color:#FF9800;font-weight:bold;">Usuario:</span>
+                <button id="logoutBtn" style="background: #f44336; color: white; padding: 6px 18px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; display: inline-block; box-shadow: 0 0 5px #f44336;">Cerrar sesión</button>
+            </div>
+        </header>
+
+        <div class="card" style="margin-bottom: 25px;">
+            <div class="card-title">
+                <i class="fas fa-crown"></i> Top 5 Usuarios - Puntuaciones en Directo
+            </div>
+            <table class="history-table" style="margin-top:0;">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Saldo</th>
+                    </tr>
+                </thead>
+                <tbody id="topUsersTable"><tr>
+            <td>001</td>
+            <td>$800.000</td>
+        </tr></tbody>
+            </table>
+        </div>
+
+        <div class="main-content">
+            <!-- Sección principal de apuestas -->
+            <div>
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-trophy"></i> Partido en Vivo
+                        <span class="live-badge">LIVE</span>
+                    </div>
+                    
+                    <div class="match-info">
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo" id="teamALogo">PSG</div>
+                                <span id="teamALabel">PSG</span>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">      
+                                <div class="team-logo" id="teamBLogo">JUV</div>
+                                <span id="teamBLabel">Juventus</span>
+                            </div>
+                        </div>
+                        
+                        <div class="countdown" id="matchTimer">90:00 +3'</div>
+                        
+                        <div class="match-stats">
+                            <div class="stats-row">
+                                <span>Posesión:</span>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar stat-bar-local" id="possessionBarA" style="width: 51%;"></div>
+                                    <div class="stat-bar stat-bar-visitor" id="possessionBarB" style="width: 49%;"></div>
+                                </div>
+                            </div>
+                            <div class="stats-row">
+                                <span>Tiros al arco:</span>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar stat-bar-local" id="shotsBarA" style="width: 53%;"></div>
+                                    <div class="stat-bar stat-bar-visitor" id="shotsBarB" style="width: 47%;"></div>
+                                </div>
+                            </div>
+                            <div class="stats-row">
+                                <span>Faltas:</span>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar stat-bar-local" id="foulsBarA" style="width: 50%;"></div>
+                                    <div class="stat-bar stat-bar-visitor" id="foulsBarB" style="width: 50%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="team-stats">
+                        <div class="team-stat-card local-team">
+                            <div class="team-stat-title" id="teamAStatsTitle">PSG</div>
+                            <div class="team-stat-value" id="teamAWinRate">68%</div>
+                            <div>Victorias</div>
+                        </div>
+                        <div class="team-stat-card visitor-team">
+                            <div class="team-stat-title" id="teamBStatsTitle">Juventus</div>
+                            <div class="team-stat-value" id="teamBWinRate">60%</div>
+                            <div>Victorias</div>
+                        </div>
+                    </div>
+                    
+                    <div class="odds-container">
+                        <div class="odd-box" data-bet="A">
+                            <div class="odd-label">Local</div>
+                            <div class="odd-value" id="oddA">2.87</div>
+                        </div>
+                        <div class="odd-box" data-bet="draw">
+                            <div class="odd-label">Empate</div>
+                            <div class="odd-value" id="oddDraw">4.14</div>
+                        </div>
+                        <div class="odd-box" data-bet="B">
+                            <div class="odd-label">Visitante</div>
+                            <div class="odd-value" id="oddB">2.97</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bet-controls">
+                        <div class="bet-amount">
+                            <label for="betAmount">Monto a apostar ($):</label>
+                            <input type="number" id="betAmount" placeholder="Ej: 1000" min="1" step="100">
+                            
+                            <div class="amount-controls">
+                                <button id="halfBtn" style="width: 50%; padding: 8px;">Mitad</button>
+                                <button id="doubleBtn" style="width: 50%; padding: 8px;">Doble</button>
+                            </div>
+                            
+                            <div class="quick-bets">
+                                <button class="quick-bet">+500</button>
+                                <button class="quick-bet">+1000</button>
+                                <button class="quick-bet">+5000</button>
+                                <button class="quick-bet">+10000</button>
+                                <button class="quick-bet">+20000</button>
+                                <button class="quick-bet">+50000</button>
+                                <button class="quick-bet">+100000</button>
+                                <button class="quick-bet">+500000</button>
+                                <button class="quick-bet">+1000000</button>
+                                <button class="quick-bet">Máx</button>
+                            </div>
+                        </div>
+                        
+                        <button id="placeBetBtn">Realizar Apuesta</button>
+                        <div class="message" id="resultMsg"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sección de estadísticas e historial -->
+            <div>
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-chart-pie"></i> Estadísticas de Equipos
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Partidos jugados</div>
+                            <div class="stat-value" id="totalMatches">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Victorias locales</div>
+                            <div class="stat-value" id="homeWins">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Victorias visitantes</div>
+                            <div class="stat-value" id="awayWins">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Empates</div>
+                            <div class="stat-value" id="draws">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Goles locales</div>
+                            <div class="stat-value" id="homeGoals">0</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Goles visitantes</div>
+                            <div class="stat-value" id="awayGoals">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="statsChart" width="538" height="250" style="display: block; box-sizing: border-box; height: 250px; width: 538px;"></canvas>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-history"></i> Historial de Partidos
+                    </div>
+                    
+                    <div class="tabs">
+                        <div class="tab active" data-tab="all">Todos</div>
+                        <div class="tab" data-tab="won">Ganados</div>
+                        <div class="tab" data-tab="lost">Perdidos</div>
+                        <div class="tab" data-tab="draw">Empates</div>
+                    </div>
+                    
+                    <div class="tab-content active" id="all-tab">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Partido</th>
+                                    <th>Resultado</th>
+                                    <th>Ganancia</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allHistory"><tr><td colspan="3" style="text-align: center; color: var(--text-muted);">No hay apuestas en esta categoría</td></tr></tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="tab-content" id="won-tab">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Partido</th>
+                                    <th>Resultado</th>
+                                    <th>Ganancia</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wonHistory"><tr><td colspan="3" style="text-align: center; color: var(--text-muted);">No hay apuestas en esta categoría</td></tr></tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="tab-content" id="lost-tab">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Partido</th>
+                                    <th>Resultado</th>
+                                    <th>Ganancia</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lostHistory"><tr><td colspan="3" style="text-align: center; color: var(--text-muted);">No hay apuestas en esta categoría</td></tr></tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="tab-content" id="draw-tab">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Partido</th>
+                                    <th>Resultado</th>
+                                    <th>Ganancia</th>
+                                </tr>
+                            </thead>
+                            <tbody id="drawHistory"><tr><td colspan="3" style="text-align: center; color: var(--text-muted);">No hay apuestas en esta categoría</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="microbit-controls">
+        <button id="connect-microbit">
+            <i class="fas fa-bluetooth-b"></i> Conectar micro:bit
+        </button>
+        <div id="microbit-status">Desconectado</div>
+    </div>
+
+    <div id="toast" class="toast">Texto copiado al portapapeles!</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Configuración de partículas
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS("particles-js", {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": ["#8a2be2", "#00ffff", "#ff00ff"]
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#8a2be2",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 3,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 140,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+        });
+
+        // Variables globales
+        let balance = 800000;
+        let selectedBet = null;
+        let betHistory = [];
+        let statsChart = null;
+        let matchHistory = [];
+        let globalStats = {
+            totalMatches: 0,
+            homeWins: 0,
+            awayWins: 0,
+            draws: 0,
+            homeGoals: 0,
+            awayGoals: 0
+        };
+
+        // --- LOGIN Y GESTIÓN DE USUARIO ---
+        let currentUser = null;
+
+        // Mostrar el modal de login
+        function showLogin() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+        // Ocultar el modal de login
+        function hideLogin() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+        // Establecer usuario y mostrarlo
+        function setUser(username) {
+            currentUser = username;
+            localStorage.setItem('currentUser', username);
+            document.getElementById('userDisplay').textContent = username ? `Usuario: ${username}` : '';
+            document.getElementById('logoutBtn').style.display = username ? 'inline-block' : 'none';
+        }
+        // Cerrar sesión y limpiar datos
+        function logout() {
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('balance');
+            localStorage.removeItem('betHistory');
+            localStorage.removeItem('globalStats');
+            location.reload();
+        }
+
+        function inicializarApp() {
+            setupEventListeners();
+            initializeChart();
+            setMatchTeams();
+            updateBalance();
+            updateHistoryDisplay();
+            updateStatsDisplay();
+            updateChart();
+            showTopUsers();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Login y gestión de usuario
+            const savedUser = localStorage.getItem('currentUser');
+            if (!savedUser) {
+                showLogin();
+                document.getElementById('loginBtn').onclick = function() {
+                    const username = document.getElementById('usernameInput').value.trim();
+                    if (!username) {
+                        document.getElementById('loginError').style.display = 'block';
+                        return;
+                    }
+                    setUser(username);
+                    hideLogin();
+                    // Reiniciar datos para nuevo usuario
+                    balance = 800000;
+                    betHistory = [];
+                    globalStats = {
+                        totalMatches: 0,
+                        homeWins: 0,
+                        awayWins: 0,
+                        draws: 0,
+                        homeGoals: 0,
+                        awayGoals: 0
+                    };
+                    localStorage.setItem('balance', balance);
+                    localStorage.setItem('betHistory', JSON.stringify(betHistory));
+                    localStorage.setItem('globalStats', JSON.stringify(globalStats));
+                    inicializarApp();
+                };
+            } else {
+                setUser(savedUser);
+                const savedBalance = localStorage.getItem('balance');
+                if (savedBalance !== null) balance = parseInt(savedBalance);
+                const savedBetHistory = localStorage.getItem('betHistory');
+                if (savedBetHistory) betHistory = JSON.parse(savedBetHistory);
+                const savedGlobalStats = localStorage.getItem('globalStats');
+                if (savedGlobalStats) globalStats = JSON.parse(savedGlobalStats);
+                hideLogin(); // <-- Asegúrate de ocultar el login si hay usuario
+                inicializarApp();
+            }
+            document.getElementById('logoutBtn').onclick = logout;
+        });
+
+        function setupEventListeners() {
+            // Selectores de apuestas
+            document.querySelectorAll('.odd-box').forEach(box => {
+                box.addEventListener('click', function() {
+                    selectBet(this.dataset.bet);
+                });
+            });
+            
+            // Botón de apostar
+            document.getElementById('placeBetBtn').addEventListener('click', placeBet);
+            
+            // Controles de monto
+            document.getElementById('halfBtn').addEventListener('click', function() {
+                adjustBetAmount(0.5);
+            });
+            
+            document.getElementById('doubleBtn').addEventListener('click', function() {
+                adjustBetAmount(2);
+            });
+            
+            // Apuestas rápidas
+            document.querySelectorAll('.quick-bet').forEach(button => {
+                button.addEventListener('click', function() {
+                    handleQuickBet(this.textContent);
+                });
+            });
+            
+            // Tabs de historial
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    switchTab(this.dataset.tab);
+                });
+            });
+        }
+
+        function initializeChart() {
+            const ctx = document.getElementById('statsChart').getContext('2d');
+            statsChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Victorias Local', 'Victorias Visitante', 'Empates'],
+                    datasets: [{
+                        data: [0, 0, 0],
+                        backgroundColor: [
+                            '#2196F3',
+                            '#FF9800',
+                            '#9E9E9E'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#f8f9fa',
+                                font: {
+                                    family: "'Courier New', monospace"
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        const equipos = [
+            { nombre: "Barcelona", fuerza: 90, abrev: "FCB", winRate: 65, goalsPerMatch: 2.3 },
+            { nombre: "Real Madrid", fuerza: 88, abrev: "RMA", winRate: 58, goalsPerMatch: 2.1 },
+            { nombre: "Bayern Munich", fuerza: 92, abrev: "BAY", winRate: 72, goalsPerMatch: 2.8 },
+            { nombre: "AC Milan", fuerza: 85, abrev: "MIL", winRate: 53, goalsPerMatch: 1.7 },
+            { nombre: "Inter de Milán", fuerza: 87, abrev: "INT", winRate: 55, goalsPerMatch: 1.9 },
+            { nombre: "Manchester United", fuerza: 86, abrev: "MUN", winRate: 52, goalsPerMatch: 1.8 },
+            { nombre: "Liverpool", fuerza: 89, abrev: "LIV", winRate: 63, goalsPerMatch: 2.4 },
+            { nombre: "Juventus", fuerza: 88, abrev: "JUV", winRate: 60, goalsPerMatch: 2.0 },
+            { nombre: "PSG", fuerza: 91, abrev: "PSG", winRate: 68, goalsPerMatch: 2.6 },
+            { nombre: "Manchester City", fuerza: 93, abrev: "MCI", winRate: 75, goalsPerMatch: 2.9 }
+        ];
+
+        let teamA, teamB;
+        let currentOdds = { A: 2.5, B: 2.8, draw: 3.0 };
+
+        function setMatchTeams() {
+            do {
+                teamA = getRandomTeam();
+                teamB = getRandomTeam();
+            } while (teamA.nombre === teamB.nombre);
+
+            // Actualizar UI
+            document.getElementById("teamALabel").textContent = teamA.nombre;
+            document.getElementById("teamBLabel").textContent = teamB.nombre;
+            document.getElementById("teamALogo").textContent = teamA.abrev;
+            document.getElementById("teamBLogo").textContent = teamB.abrev;
+            document.getElementById("teamAStatsTitle").textContent = teamA.nombre;
+            document.getElementById("teamBStatsTitle").textContent = teamB.nombre;
+            document.getElementById("teamAWinRate").textContent = teamA.winRate + "%";
+            document.getElementById("teamBWinRate").textContent = teamB.winRate + "%";
+
+            // Calcular cuotas
+            calculateOdds();
+            
+            // Actualizar estadísticas del partido
+            updateMatchStats();
+            
+            // Deseleccionar apuesta
+            if (selectedBet) {
+                document.querySelector(`.odd-box[data-bet="${selectedBet}"]`).classList.remove('selected');
+                selectedBet = null;
+            }
+            
+            // Limpiar mensajes
+            document.getElementById("resultMsg").className = "message";
+            document.getElementById("resultMsg").innerHTML = "";
+        }
+
+        function getRandomTeam() {
+            return equipos[Math.floor(Math.random() * equipos.length)];
+        }
+
+        function calculateOdds() {
+            const totalFuerza = teamA.fuerza + teamB.fuerza;
+            const probA = (teamA.fuerza / totalFuerza) * 0.85; // 85% del cálculo normal
+            const probB = (teamB.fuerza / totalFuerza) * 0.85; // 85% del cálculo normal
+            const probDraw = 0.3; // 30% de probabilidad base de empate
+
+            // Normalizar probabilidades
+            const totalProb = probA + probB + probDraw;
+            
+            // Convertir probabilidades a cuotas decimales (con margen de la casa)
+            const margin = 1.08; // Margen del 8% para la casa
+            currentOdds.A = (1 / (probA / totalProb)) * margin;
+            currentOdds.B = (1 / (probB / totalProb)) * margin;
+            currentOdds.draw = (1 / (probDraw / totalProb)) * margin;
+
+            // Actualizar visualización de cuotas
+            document.getElementById("oddA").textContent = currentOdds.A.toFixed(2);
+            document.getElementById("oddB").textContent = currentOdds.B.toFixed(2);
+            document.getElementById("oddDraw").textContent = currentOdds.draw.toFixed(2);
+        }
+
+        function updateMatchStats() {
+            // Generar estadísticas realistas basadas en la fuerza de los equipos
+            const possessionA = 40 + (teamA.fuerza - teamB.fuerza) + Math.floor(Math.random() * 10);
+            const possessionB = 100 - possessionA;
+            
+            const shotsA = 5 + Math.floor((teamA.fuerza / 10) * Math.random() * 3);
+            const shotsOnTargetA = Math.floor(shotsA * (0.4 + (teamA.fuerza / 100 * 0.2)));
+            
+            const shotsB = 5 + Math.floor((teamB.fuerza / 10) * Math.random() * 3);
+            const shotsOnTargetB = Math.floor(shotsB * (0.4 + (teamB.fuerza / 100 * 0.2)));
+            
+            const foulsA = 8 + Math.floor(Math.random() * 7);
+            const foulsB = 8 + Math.floor(Math.random() * 7);
+            
+            // Actualizar barras de estadísticas
+            document.getElementById("possessionBarA").style.width = possessionA + "%";
+            document.getElementById("possessionBarB").style.width = possessionB + "%";
+            
+            const totalShots = shotsA + shotsB;
+            const shotsPercentageA = Math.round((shotsA / totalShots) * 100);
+            const shotsPercentageB = 100 - shotsPercentageA;
+            document.getElementById("shotsBarA").style.width = shotsPercentageA + "%";
+            document.getElementById("shotsBarB").style.width = shotsPercentageB + "%";
+            
+            const totalFouls = foulsA + foulsB;
+            const foulsPercentageA = Math.round((foulsA / totalFouls) * 100);
+            const foulsPercentageB = 100 - foulsPercentageA;
+            document.getElementById("foulsBarA").style.width = foulsPercentageA + "%";
+            document.getElementById("foulsBarB").style.width = foulsPercentageB + "%";
+        }
+
+        function selectBet(betType) {
+            // Deseleccionar cualquier apuesta previa
+            document.querySelectorAll('.odd-box').forEach(box => {
+                box.classList.remove('selected');
+            });
+            
+            // Seleccionar nueva apuesta
+            selectedBet = betType;
+            document.querySelector(`.odd-box[data-bet="${betType}"]`).classList.add('selected');
+            
+            // Mostrar información sobre la selección
+            const teamName = betType === 'A' ? teamA.nombre : 
+                            betType === 'B' ? teamB.nombre : 'Empate';
+            const odds = betType === 'A' ? currentOdds.A : 
+                        betType === 'B' ? currentOdds.B : currentOdds.draw;
+            
+            document.getElementById("resultMsg").className = "message";
+            document.getElementById("resultMsg").innerHTML = 
+                `Seleccionado: <strong>${teamName}</strong> (Cuota: ${odds.toFixed(2)}x)`;
+        }
+
+        function placeBet() {
+            if (!selectedBet) {
+                showMessage("Por favor selecciona una opción de apuesta", "error");
+                return;
+            }
+
+            const betAmountInput = document.getElementById("betAmount");
+            const betAmount = parseInt(betAmountInput.value);
+
+            if (!betAmount || betAmount <= 0) {
+                showMessage("Por favor ingresa un monto válido", "error");
+                return;
+            }
+
+            if (betAmount > balance) {
+                showMessage("No tienes suficiente saldo para esta apuesta", "error");
+                return;
+            }
+
+            // Calcular probabilidades más precisas
+            const totalFuerza = teamA.fuerza + teamB.fuerza;
+            const probA = (teamA.fuerza / totalFuerza) * 0.7; // 70% del cálculo normal
+            const probB = (teamB.fuerza / totalFuerza) * 0.7; // 70% del cálculo normal
+            const probDraw = 0.3; // 30% de probabilidad base de empate
+
+            const random = Math.random();
+            let resultado;
+            let goalsA, goalsB;
+
+            if (random < probA) {
+                resultado = 'A';
+                goalsA = Math.max(1, Math.round(teamA.goalsPerMatch * (0.7 + Math.random() * 0.6)));
+                goalsB = Math.max(0, goalsA - 1 - Math.floor(Math.random() * 2));
+            } else if (random < probA + probB) {
+                resultado = 'B';
+                goalsB = Math.max(1, Math.round(teamB.goalsPerMatch * (0.7 + Math.random() * 0.6)));
+                goalsA = Math.max(0, goalsB - 1 - Math.floor(Math.random() * 2));
+            } else {
+                resultado = 'draw';
+                goalsA = goalsB = Math.max(0, Math.round((teamA.goalsPerMatch + teamB.goalsPerMatch) / 2 * (0.7 + Math.random() * 0.6)));
+            }
+            const finalScore = `${goalsA}-${goalsB}`;
+
+            // Determinar ganancia
+            let ganancia = 0;
+            let ganador = resultado === 'A' ? teamA.nombre :
+                          resultado === 'B' ? teamB.nombre : 'Empate';
+
+            // Actualizar estadísticas globales
+            updateGlobalStats(resultado, goalsA, goalsB);
+
+            if (selectedBet === resultado) {
+                const odds = selectedBet === 'A' ? currentOdds.A :
+                             selectedBet === 'B' ? currentOdds.B : currentOdds.draw;
+                ganancia = Math.floor(betAmount * odds);
+                balance += ganancia;
+
+                const winMessage = resultado === 'draw' ?
+                    `🎉 ¡Empate! ${finalScore} - Ganaste $${ganancia} (${odds.toFixed(2)}x)` :
+                    `🎉 ¡${ganador} gana ${finalScore}! Ganaste $${ganancia} (${odds.toFixed(2)}x)`;
+
+                showMessage(winMessage, "success");
+
+                // ENVÍA "WIN" A LA MICRO:BIT
+                if (serialPort) {
+                    sendToMicrobit("WIN");
+                }
+            } else {
+                balance -= betAmount;
+                const loseMessage = `😢 Perdiste $${betAmount}. ${teamA.nombre} ${finalScore} ${teamB.nombre} (${ganador})`;
+                showMessage(loseMessage, "error");
+
+                // ENVÍA "LOSE" A LA MICRO:BIT
+                if (serialPort) {
+                    sendToMicrobit("LOSE");
+                }
+            }
+
+            // Actualizar saldo
+            updateBalance();
+
+            // Añadir al historial
+            addToHistory({
+                match: `${teamA.nombre} vs ${teamB.nombre}`,
+                score: finalScore,
+                bet: selectedBet === 'A' ? teamA.nombre :
+                     selectedBet === 'B' ? teamB.nombre : 'Empate',
+                result: resultado,
+                winner: ganador,
+                profit: selectedBet === resultado ? ganancia : -betAmount,
+                odds: selectedBet === 'A' ? currentOdds.A :
+                      selectedBet === 'B' ? currentOdds.B : currentOdds.draw,
+                won: selectedBet === resultado,
+                date: new Date().toLocaleString()
+            });
+
+            // Actualizar gráfico y estadísticas
+            updateChart();
+            updateStatsDisplay();
+
+            // Reiniciar partido
+            setTimeout(setMatchTeams, 3000);
+        }
+
+        function updateGlobalStats(result, goalsA, goalsB) {
+            globalStats.totalMatches++;
+            globalStats.homeGoals += goalsA;
+            globalStats.awayGoals += goalsB;
+            
+            if (result === 'A') {
+                globalStats.homeWins++;
+            } else if (result === 'B') {
+                globalStats.awayWins++;
+            } else {
+                globalStats.draws++;
+            }
+            
+            // Guardar estadísticas
+            localStorage.setItem('globalStats', JSON.stringify(globalStats));
+        }
+
+        function updateStatsDisplay() {
+            document.getElementById("totalMatches").textContent = globalStats.totalMatches;
+            document.getElementById("homeWins").textContent = globalStats.homeWins;
+            document.getElementById("awayWins").textContent = globalStats.awayWins;
+            document.getElementById("draws").textContent = globalStats.draws;
+            document.getElementById("homeGoals").textContent = globalStats.homeGoals;
+            document.getElementById("awayGoals").textContent = globalStats.awayGoals;
+        }
+
+        function addToHistory(bet) {
+            betHistory.unshift(bet);
+            matchHistory.unshift({
+                match: bet.match,
+                score: bet.score,
+                result: bet.result,
+                winner: bet.winner,
+                date: bet.date
+            });
+
+            // Guardar historial y balance en localStorage
+            localStorage.setItem('betHistory', JSON.stringify(betHistory));
+            localStorage.setItem('balance', balance);
+            
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            // Actualizar todas las pestañas del historial
+            updateHistoryTab('all', betHistory);
+            updateHistoryTab('won', betHistory.filter(b => b.won));
+            updateHistoryTab('lost', betHistory.filter(b => !b.won && !(b.result === 'draw' && b.bet === 'Empate')));
+            updateHistoryTab('draw', betHistory.filter(b => b.result === 'draw' && b.bet === 'Empate'));
+        }
+
+        function updateHistoryTab(tabId, items) {
+            const tbody = document.getElementById(`${tabId}History`);
+            tbody.innerHTML = '';
+            
+            if (items.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-color);">No hay apuestas en esta categoría</td></tr>`;
+                return;
+            }
+            
+            items.forEach(bet => {
+                const row = document.createElement('tr');
+                
+                let resultClass = '';
+                if (bet.result === 'draw') {
+                    resultClass = 'result-draw';
+                } else {
+                    resultClass = bet.won ? 'result-win' : 'result-loss';
+                }
+                
+                row.innerHTML = `
+                    <td>${bet.match}</td>
+                    <td class="${resultClass}">${bet.score} (${bet.winner})</td>
+                    <td class="${bet.won ? 'profit-positive' : 'profit-negative'}">${bet.won ? '+' : ''}$${bet.profit}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateChart() {
+            statsChart.data.datasets[0].data = [
+                globalStats.homeWins,
+                globalStats.awayWins,
+                globalStats.draws
+            ];
+            statsChart.update();
+        }
+
+        function adjustBetAmount(factor) {
+            const betInput = document.getElementById("betAmount");
+            let currentValue = parseInt(betInput.value) || 0;
+            
+            if (factor === 'max') {
+                betInput.value = balance;
+            } else {
+                betInput.value = Math.floor(currentValue * factor);
+            }
+            
+            // Asegurarse de no exceder el balance
+            if (parseInt(betInput.value) > balance) {
+                betInput.value = balance;
+            }
+        }
+
+        function handleQuickBet(action) {
+            const betInput = document.getElementById("betAmount");
+            let currentValue = parseInt(betInput.value) || 0;
+            
+            if (action === 'Máx') {
+                betInput.value = balance;
+            } else {
+                const amount = parseInt(action.substring(1));
+                betInput.value = currentValue + amount;
+            }
+            
+            // Asegurarse de no exceder el balance
+            if (parseInt(betInput.value) > balance) {
+                betInput.value = balance;
+            }
+        }
+
+        function switchTab(tabId) {
+            // Ocultar todos los tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Mostrar el tab seleccionado
+            document.getElementById(`${tabId}-tab`).classList.add('active');
+            
+            // Actualizar tabs activos
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+        }
+
+        function showMessage(message, type) {
+            const msgElement = document.getElementById("resultMsg");
+            msgElement.className = `message ${type}`;
+            msgElement.innerHTML = message;
+        }
+
+        function updateBalance() {
+            const balanceElement = document.getElementById("balance");
+            // Mostrar siempre 3 decimales para saldos altos
+            if (balance >= 1000000) {
+                balanceElement.textContent = (balance / 1000000).toFixed(3) + 'M';
+            } else {
+                balanceElement.textContent = balance.toLocaleString('es-ES');
+            }
+            
+            localStorage.setItem('balance', balance);
+            saveUserScore();
+            showTopUsers();
+            
+            // Enviar saldo actualizado al micro:bit
+            if (serialPort) {
+                sendToMicrobit(`BALANCE:${balance}`);
+            }
+        }
+
+        // Guarda el saldo de cada usuario en localStorage
+        function saveUserScore() {
+            let scores = JSON.parse(localStorage.getItem('userScores') || '{}');
+            if (currentUser) {
+                scores[currentUser] = balance;
+                localStorage.setItem('userScores', JSON.stringify(scores));
+            }
+        }
+
+        // Muestra el top 5 de usuarios con más saldo
+        function showTopUsers() {
+            let scores = JSON.parse(localStorage.getItem('userScores') || '{}');
+            let top = Object.entries(scores)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            const tbody = document.getElementById('topUsersTable');
+            tbody.innerHTML = '';
+            if (top.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="2" style="text-align:center;color:var(--text-color);">Sin datos</td></tr>`;
+                return;
+            }
+            top.forEach(([user, score], i) => {
+                tbody.innerHTML += `<tr>
+                    <td>${i === 0 ? '👑 ' : ''}${user}</td>
+                    <td>$${score.toLocaleString()}</td>
+                </tr>`;
+            });
+        }
+
+        // 2. Variables globales para micro:bit
+        let serialPort = null;
+        let reader = null;
+        let writer = null;
+
+        // 3. Conexión al micro:bit
+        document.getElementById('connect-microbit').addEventListener('click', async () => {
+            try {
+                console.log("Intentando conectar a micro:bit...");
+                if (!('serial' in navigator)) {
+                    alert("Web Serial API no soportada. Usa Chrome o Edge.");
+                    document.getElementById('microbit-status').textContent = "No soportado";
+                    return;
+                }
+                serialPort = await navigator.serial.requestPort();
+                console.log("Puerto seleccionado:", serialPort);
+                await serialPort.open({ baudRate: 115200 });
+                writer = serialPort.writable.getWriter();
+
+                document.getElementById('microbit-status').textContent = "Conectado ✓";
+                document.getElementById('connect-microbit').innerHTML = '<i class="fas fa-microchip"></i> Micro:bit listo';
+
+                listenToMicrobit();
+            } catch (error) {
+                console.error("Error de conexión:", error);
+                document.getElementById('microbit-status').textContent = "Error: " + error.message;
+                alert("No se pudo conectar a la micro:bit. ¿Está conectada por USB y con el programa correcto?");
+            }
+        });
+
+        // 4. Escuchar datos del micro:bit
+        async function listenToMicrobit() {
+            if (!serialPort) return;
+            const decoder = new TextDecoderStream();
+            const inputStream = serialPort.readable.pipeThrough(decoder);
+            reader = inputStream.getReader();
+
+            try {
+                while (serialPort.readable) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    if (value) processMicrobitInput(value.trim());
+                }
+            } catch (error) {
+                console.error("Error lectura:", error);
+                document.getElementById('microbit-status').textContent = "Desconectado";
+            }
+        }
+
+        // 5. Procesar comandos del micro:bit
+        function processMicrobitInput(data) {
+            console.log("Micro:bit envió:", data);
+
+            if (data === "L") {
+                selectBet("A");
+            } else if (data === "V") {
+                selectBet("B");
+            } else if (data === "E") {
+                selectBet("draw");
+            } else if (data === "P") {
+                placeBet();
+            } else if (data === "UP") {
+                adjustBetAmount(1.5);
+            } else if (data === "DOWN") {
+                adjustBetAmount(0.5);
+            } else if (data.startsWith("SCORE:")) {
+                const score = data.split(":")[1];
+                // updateScoreDisplay(score); // Esta función no está definida en el código original
+            }
+        }
+
+        // 6. Enviar datos al micro:bit
+        function sendToMicrobit(message) {
+            if (writer && message) {
+                const fullMessage = message + "\n";
+                const data = new TextEncoder().encode(fullMessage);
+                writer.write(data).catch((error) => {
+                    console.error("Error enviando a micro:bit:", error);
+                });
+            } else {
+                console.warn("No hay conexión activa con la micro:bit o mensaje vacío.");
+            }
+        }
+
+        // Función para mostrar notificación toast
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.className = 'toast show';
+            
+            setTimeout(() => {
+                toast.className = toast.className.replace('show', '');
+            }, 3000);
+        }
+        
+        // Efecto de escritura automática para títulos
+        const titles = document.querySelectorAll('h1, h2');
+        titles.forEach(title => {
+            const originalText = title.textContent;
+            title.textContent = '';
+            
+            let i = 0;
+            const typingEffect = setInterval(() => {
+                if (i < originalText.length) {
+                    title.textContent += originalText.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(typingEffect);
+                }
+            }, 100);
+        });
+    </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabaseClient = supabase.createClient(
+    "https://kyqiscbbnujogmzemkwv.supabase.co", 
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cWlzY2JibnVqb2dtemVtd3YiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc1NzExNzI3NywiZXhwIjoyMDcyNjkzMjc3fQ.fY5PcI9AXiOUpSaJJNntC7nHXalCOUeVP0LifG_ywpk"
+  );
+
+  // Verificar sesión
+  async function checkSession() {
+    const { data } = await supabaseClient.auth.getSession();
+    if (!data.session) {
+      window.location.href = "login.html"; // volver al login si no hay sesión
+    } else {
+      document.getElementById("userDisplay").textContent = "Usuario: " + data.session.user.email;
+    }
+  }
+
+  checkSession();
+
+  // Logout real
+  async function logout() {
+    await supabaseClient.auth.signOut();
+    window.location.href = "login.html";
+  }
+  document.getElementById("logoutBtn").addEventListener("click", logout);
+
+</script>
+
+</body></html>
