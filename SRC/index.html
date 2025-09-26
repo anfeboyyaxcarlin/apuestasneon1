@@ -1,8 +1,14 @@
+
+
 <!DOCTYPE html><html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo o Nada</title>
-    <style>
+    <title>FUTBOL AL MAXIMO - Estadísticas Avanzadas</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+
         :root {
             --primary-color: #8a2be2;
             --secondary-color: #00ffff;
@@ -632,19 +638,24 @@
                 text-shadow: none;
             }
         }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</style>
+<style>
+
+
+
+</style>
 </head>
 <body>
-    <div id="particles-js"></div>
+    <div id="particles-js"><canvas class="particles-js-canvas-el" width="652" height="326" style="width: 100%; height: 100%;"></canvas></div>
     
     <div id="authModal">
         <div>
             <!-- Login Form -->
             <form id="loginForm">
                 <h2>Iniciar Sesión</h2>
-                <input id="loginEmail" type="email" placeholder="Correo electrónico" required>
-                <input id="loginPassword" type="password" placeholder="Contraseña" required>
+                <input id="loginEmail" type="email" placeholder="Correo electrónico" required="">
+                <input id="loginPassword" type="password" placeholder="Contraseña" required="">
                 <button type="submit">Entrar</button>
                 <p class="form-switch" id="switchToRegister">¿No tienes cuenta? Regístrate</p>
             </form>
@@ -652,9 +663,9 @@
             <!-- Register Form -->
             <form id="registerForm" style="display: none;">
                 <h2>Crear Cuenta</h2>
-                <input id="registerUsername" type="text" placeholder="Nombre de usuario" required>
-                <input id="registerEmail" type="email" placeholder="Correo electrónico" required>
-                <input id="registerPassword" type="password" placeholder="Contraseña" required>
+                <input id="registerUsername" type="text" placeholder="Nombre de usuario" required="">
+                <input id="registerEmail" type="email" placeholder="Correo electrónico" required="">
+                <input id="registerPassword" type="password" placeholder="Contraseña" required="">
                 <button type="submit">Registrarse</button>
                 <p class="form-switch" id="switchToLogin">¿Ya tienes cuenta? Inicia sesión</p>
             </form>
@@ -664,14 +675,14 @@
     
     <div class="container">
         <header>
-            <h1 class="neon-text"><i class="fas fa-futbol"></i>TODO O NADA</h1>
+            <h1 class="neon-text"><i class="fas fa-futbol"></i> FUTBOL AL MAXIMO</h1>
             <div class="user-panel">
                 <div class="balance">
                     <i class="fas fa-coins"></i>
-                    <span id="balance">0</span>
+                    <span id="balance">1.123.303</span>
                 </div>
-                <span id="userDisplay" style="color:#FF9800;font-weight:bold;"></span>
-                <button id="logoutBtn" style="background: #f44336; color: white; padding: 6px 18px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; display: none; box-shadow: 0 0 5px #f44336;">Cerrar sesión</button>
+                <span id="userDisplay" style="color:#FF9800;font-weight:bold;">Usuario: aaa</span>
+                <button id="logoutBtn" style="background: rgb(244, 67, 54); color: white; padding: 6px 18px; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; display: inline-block; box-shadow: rgb(244, 67, 54) 0px 0px 5px;">Cerrar sesión</button>
             </div>
         </header>
 
@@ -686,9 +697,22 @@
                         <th>Saldo</th>
                     </tr>
                 </thead>
-                <tbody id="topUsersTable">
-                    <!-- Filas generadas por JS -->
-                </tbody>
+                <tbody id="topUsersTable"><tr>
+                    <td>👑 aaa</td>
+                    <td>$1.123.303</td>
+                </tr><tr>
+                    <td>Ethan</td>
+                    <td>$912.712</td>
+                </tr><tr>
+                    <td>Lat33l</td>
+                    <td>$802.263</td>
+                </tr><tr>
+                    <td>Zulay</td>
+                    <td>$800.000</td>
+                </tr><tr>
+                    <td>Jossman</td>
+                    <td>$784.775</td>
+                </tr></tbody>
             </table>
         </div>
 
@@ -704,13 +728,13 @@
                     <div class="match-info">
                         <div class="teams">
                             <div class="team">
-                                <div class="team-logo" id="teamALogo"></div>
-                                <span id="teamALabel"></span>
+                                <div class="team-logo" id="teamALogo">PSG</div>
+                                <span id="teamALabel">PSG</span>
                             </div>
                             <div class="vs">VS</div>
                             <div class="team">      
-                                <div class="team-logo" id="teamBLogo"></div>
-                                <span id="teamBLabel"></span>
+                                <div class="team-logo" id="teamBLogo">RMA</div>
+                                <span id="teamBLabel">Real Madrid</span>
                             </div>
                         </div>
                         
@@ -720,22 +744,22 @@
                             <div class="stats-row">
                                 <span>Posesión:</span>
                                 <div class="stat-bar-container">
-                                    <div class="stat-bar stat-bar-local" id="possessionBarA" style="width: 50%;"></div>
-                                    <div class="stat-bar stat-bar-visitor" id="possessionBarB" style="width: 50%;"></div>
+                                    <div class="stat-bar stat-bar-local" id="possessionBarA" style="width: 52%;"></div>
+                                    <div class="stat-bar stat-bar-visitor" id="possessionBarB" style="width: 48%;"></div>
                                 </div>
                             </div>
                             <div class="stats-row">
                                 <span>Tiros al arco:</span>
                                 <div class="stat-bar-container">
-                                    <div class="stat-bar stat-bar-local" id="shotsBarA" style="width: 50%;"></div>
-                                    <div class="stat-bar stat-bar-visitor" id="shotsBarB" style="width: 50%;"></div>
+                                    <div class="stat-bar stat-bar-local" id="shotsBarA" style="width: 33%;"></div>
+                                    <div class="stat-bar stat-bar-visitor" id="shotsBarB" style="width: 67%;"></div>
                                 </div>
                             </div>
                             <div class="stats-row">
                                 <span>Faltas:</span>
                                 <div class="stat-bar-container">
-                                    <div class="stat-bar stat-bar-local" id="foulsBarA" style="width: 50%;"></div>
-                                    <div class="stat-bar stat-bar-visitor" id="foulsBarB" style="width: 50%;"></div>
+                                    <div class="stat-bar stat-bar-local" id="foulsBarA" style="width: 46%;"></div>
+                                    <div class="stat-bar stat-bar-visitor" id="foulsBarB" style="width: 54%;"></div>
                                 </div>
                             </div>
                         </div>
@@ -743,13 +767,13 @@
                     
                     <div class="team-stats">
                         <div class="team-stat-card local-team">
-                            <div class="team-stat-title" id="teamAStatsTitle"></div>
-                            <div class="team-stat-value" id="teamAWinRate"></div>
+                            <div class="team-stat-title" id="teamAStatsTitle">PSG</div>
+                            <div class="team-stat-value" id="teamAWinRate">68%</div>
                             <div>Victorias</div>
                         </div>
                         <div class="team-stat-card visitor-team">
-                            <div class="team-stat-title" id="teamBStatsTitle"></div>
-                            <div class="team-stat-value" id="teamBWinRate"></div>
+                            <div class="team-stat-title" id="teamBStatsTitle">Real Madrid</div>
+                            <div class="team-stat-value" id="teamBWinRate">58%</div>
                             <div>Victorias</div>
                         </div>
                     </div>
@@ -757,15 +781,15 @@
                     <div class="odds-container">
                         <div class="odd-box" data-bet="A">
                             <div class="odd-label">Local</div>
-                            <div class="odd-value" id="oddA"></div>
+                            <div class="odd-value" id="oddA">2.87</div>
                         </div>
                         <div class="odd-box" data-bet="draw">
                             <div class="odd-label">Empate</div>
-                            <div class="odd-value" id="oddDraw"></div>
+                            <div class="odd-value" id="oddDraw">4.14</div>
                         </div>
                         <div class="odd-box" data-bet="B">
                             <div class="odd-label">Visitante</div>
-                            <div class="odd-value" id="oddB"></div>
+                            <div class="odd-value" id="oddB">2.97</div>
                         </div>
                     </div>
                     
@@ -793,8 +817,17 @@
                             </div>
                         </div>
                         
+                        <button id="analyzeMatchBtn">✨ Analizar Partido con IA</button>
                         <button id="placeBetBtn">Realizar Apuesta</button>
                         <div class="message" id="resultMsg"></div>
+                        
+                        <div id="aiAnalysisContainer" style="display: block; margin-top: 20px;">
+                            <div class="card-title" style="font-size: 1.2em; border-bottom: none; margin-bottom: 10px;">
+                                <i class="fas fa-robot"></i> Análisis de la IA
+                            </div>
+                            <div id="aiAnalysisResult" style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; border: 1px solid var(--secondary-color); line-height: 1.5; color: var(--secondary-color); text-shadow: 0 0 5px var(--secondary-color);">Error del analista: Method doesn't allow unregistered callers (callers without established identity). Please use API Key or other form of API consumer identity to call this API.</div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -809,32 +842,32 @@
                     <div class="stats-grid">
                         <div class="stat-item">
                             <div class="stat-label">Partidos jugados</div>
-                            <div class="stat-value" id="totalMatches">0</div>
+                            <div class="stat-value" id="totalMatches">8</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Victorias locales</div>
-                            <div class="stat-value" id="homeWins">0</div>
+                            <div class="stat-value" id="homeWins">2</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Victorias visitantes</div>
-                            <div class="stat-value" id="awayWins">0</div>
+                            <div class="stat-value" id="awayWins">4</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Empates</div>
-                            <div class="stat-value" id="draws">0</div>
+                            <div class="stat-value" id="draws">2</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Goles locales</div>
-                            <div class="stat-value" id="homeGoals">0</div>
+                            <div class="stat-value" id="homeGoals">9</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-label">Goles visitantes</div>
-                            <div class="stat-value" id="awayGoals">0</div>
+                            <div class="stat-value" id="awayGoals">13</div>
                         </div>
                     </div>
                     
                     <div class="chart-container">
-                        <canvas id="statsChart" width="538" height="250" style="display: block; box-sizing: border-box; height: 250px; width: 538px;"></canvas>
+                        <canvas id="statsChart" width="560" height="250" style="display: block; box-sizing: border-box; height: 250px; width: 560px;"></canvas>
                     </div>
                 </div>
                 
@@ -859,7 +892,47 @@
                                     <th>Ganancia</th>
                                 </tr>
                             </thead>
-                            <tbody id="allHistory"></tbody>
+                            <tbody id="allHistory"><tr>
+                    <td>Juventus vs PSG</td>
+                    <td class="result-win">1-2 (PSG)</td>
+                    <td class="profit-positive">
+                        +$143.709
+                    </td></tr><tr>
+                    <td>AC Milan vs Manchester United</td>
+                    <td class="result-draw">2-2 (Empate)</td>
+                    <td class="profit-negative">
+                        $-50.000
+                    </td></tr><tr>
+                    <td>Barcelona vs Bayern Munich</td>
+                    <td class="result-win">2-0 (Barcelona)</td>
+                    <td class="profit-positive">
+                        +$500.000
+                    </td></tr><tr>
+                    <td>Inter de Milán vs Manchester United</td>
+                    <td class="result-win">1-0 (Inter de Milán)</td>
+                    <td class="profit-positive">
+                        +$-50.000
+                    </td></tr><tr>
+                    <td>Barcelona vs Liverpool</td>
+                    <td class="result-win">0-2 (Liverpool)</td>
+                    <td class="profit-positive">
+                        +$470.203
+                    </td></tr><tr>
+                    <td>Liverpool vs Manchester City</td>
+                    <td class="result-draw">3-3 (Empate)</td>
+                    <td class="profit-negative">
+                        $-160.000
+                    </td></tr><tr>
+                    <td>Real Madrid vs Inter de Milán</td>
+                    <td class="result-win">0-2 (Inter de Milán)</td>
+                    <td class="profit-positive">
+                        +$29.391
+                    </td></tr><tr>
+                    <td>Manchester City vs Barcelona</td>
+                    <td class="result-loss">0-2 (Barcelona)</td>
+                    <td class="profit-negative">
+                        $-10.000
+                    </td></tr></tbody>
                         </table>
                     </div>
                     
@@ -872,7 +945,32 @@
                                     <th>Ganancia</th>
                                 </tr>
                             </thead>
-                            <tbody id="wonHistory"></tbody>
+                            <tbody id="wonHistory"><tr>
+                    <td>Juventus vs PSG</td>
+                    <td class="result-win">1-2 (PSG)</td>
+                    <td class="profit-positive">
+                        +$143.709
+                    </td></tr><tr>
+                    <td>Barcelona vs Bayern Munich</td>
+                    <td class="result-win">2-0 (Barcelona)</td>
+                    <td class="profit-positive">
+                        +$500.000
+                    </td></tr><tr>
+                    <td>Inter de Milán vs Manchester United</td>
+                    <td class="result-win">1-0 (Inter de Milán)</td>
+                    <td class="profit-positive">
+                        +$-50.000
+                    </td></tr><tr>
+                    <td>Barcelona vs Liverpool</td>
+                    <td class="result-win">0-2 (Liverpool)</td>
+                    <td class="profit-positive">
+                        +$470.203
+                    </td></tr><tr>
+                    <td>Real Madrid vs Inter de Milán</td>
+                    <td class="result-win">0-2 (Inter de Milán)</td>
+                    <td class="profit-positive">
+                        +$29.391
+                    </td></tr></tbody>
                         </table>
                     </div>
                     
@@ -885,7 +983,22 @@
                                     <th>Ganancia</th>
                                 </tr>
                             </thead>
-                            <tbody id="lostHistory"></tbody>
+                            <tbody id="lostHistory"><tr>
+                    <td>AC Milan vs Manchester United</td>
+                    <td class="result-draw">2-2 (Empate)</td>
+                    <td class="profit-negative">
+                        $-50.000
+                    </td></tr><tr>
+                    <td>Liverpool vs Manchester City</td>
+                    <td class="result-draw">3-3 (Empate)</td>
+                    <td class="profit-negative">
+                        $-160.000
+                    </td></tr><tr>
+                    <td>Manchester City vs Barcelona</td>
+                    <td class="result-loss">0-2 (Barcelona)</td>
+                    <td class="profit-negative">
+                        $-10.000
+                    </td></tr></tbody>
                         </table>
                     </div>
                     
@@ -898,7 +1011,7 @@
                                     <th>Ganancia</th>
                                 </tr>
                             </thead>
-                            <tbody id="drawHistory"></tbody>
+                            <tbody id="drawHistory"><tr><td colspan="3" style="text-align: center;">No hay apuestas</td></tr></tbody>
                         </table>
                     </div>
                 </div>
@@ -1074,6 +1187,7 @@
                 box.addEventListener('click', function() { selectBet(this.dataset.bet); });
             });
             document.getElementById('placeBetBtn').addEventListener('click', placeBet);
+            document.getElementById('analyzeMatchBtn').addEventListener('click', getAIPrediction);
             document.getElementById('halfBtn').addEventListener('click', () => adjustBetAmount(0.5));
             document.getElementById('doubleBtn').addEventListener('click', () => adjustBetAmount(2));
             document.querySelectorAll('.quick-bet').forEach(button => {
@@ -1134,6 +1248,7 @@
             }
             document.getElementById("resultMsg").className = "message";
             document.getElementById("resultMsg").innerHTML = "";
+            document.getElementById("aiAnalysisContainer").style.display = 'none'; // Ocultar análisis anterior
         }
 
         function calculateOdds() {
@@ -1371,6 +1486,92 @@
                 </tr>`;
             });
         }
+        
+        // --- GEMINI API INTEGRATION ---
+        async function getAIPrediction() {
+            const analyzeBtn = document.getElementById('analyzeMatchBtn');
+            const analysisContainer = document.getElementById('aiAnalysisContainer');
+            const analysisResult = document.getElementById('aiAnalysisResult');
+
+            if (!teamA || !teamB) {
+                showMessage("Los equipos no están definidos aún.", "error");
+                return;
+            }
+
+            // Show loading state
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analizando...';
+            analysisContainer.style.display = 'block';
+            analysisResult.textContent = 'Consultando a nuestros expertos...';
+
+            const systemPrompt = "Actúa como un analista deportivo experto y carismático. Tu especialidad es el fútbol. Proporciona un análisis breve, emocionante y conciso (no más de 3 o 4 frases) para el partido que se te presenta. Utiliza un lenguaje vibrante y jerga futbolística. Basa tu análisis en las estadísticas proporcionadas, pero siéntete libre de añadir un toque de drama y especulación sobre qué equipo podría tener la ventaja y por qué. Termina con una predicción audaz.";
+            const userQuery = `Analiza el próximo partido entre ${teamA.nombre} (fuerza: ${teamA.fuerza}, ratio de victorias: ${teamA.winRate}%) y ${teamB.nombre} (fuerza: ${teamB.fuerza}, ratio de victorias: ${teamB.winRate}%).`;
+            
+            const apiKey = "AIzaSyCBuLDXJDZ4EgNvugsyx64JyCDRR0TG9-c"; // API key will be provided by the environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+
+            let response;
+            let attempts = 0;
+            const maxAttempts = 5;
+
+            while (attempts < maxAttempts) {
+                try {
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        const candidate = result.candidates?.[0];
+
+                        if (candidate && candidate.content?.parts?.[0]?.text) {
+                            analysisResult.textContent = candidate.content.parts[0].text;
+                        } else {
+                            analysisResult.textContent = 'No se pudo obtener un análisis en este momento. La IA parece estar viendo otro partido.';
+                        }
+                        break; // Success, exit loop
+                    } else {
+                        if (response.status === 429 || response.status >= 500) {
+                            attempts++;
+                            if (attempts >= maxAttempts) {
+                                analysisResult.textContent = 'Nuestros analistas están sobrecargados. Inténtalo de nuevo más tarde.';
+                                break;
+                            }
+                            const delay = Math.pow(2, attempts) * 1000 + Math.random() * 1000;
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                        } else {
+                            const errorResult = await response.json();
+                            console.error('API Error:', errorResult);
+                            analysisResult.textContent = `Error del analista: ${errorResult.error?.message || 'Error desconocido'}`;
+                            break;
+                        }
+                    }
+                } catch (error) {
+                    console.error('Fetch Error:', error);
+                    attempts++;
+                    if (attempts >= maxAttempts) {
+                        analysisResult.textContent = 'Hubo un problema de conexión con la cabina de análisis. Revisa la conexión a internet.';
+                        break;
+                    }
+                    const delay = Math.pow(2, attempts) * 1000 + Math.random() * 1000;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                }
+            }
+            
+            // Restore button
+            analyzeBtn.disabled = false;
+            analyzeBtn.innerHTML = '✨ Analizar Partido con IA';
+        }
+
 
         // --- MICRO:BIT INTEGRATION (No changes needed) ---
         let serialPort = null, reader = null, writer = null;
@@ -1419,5 +1620,6 @@
         }
     </script>
 
-</body></html>
 
+
+</body></html>
